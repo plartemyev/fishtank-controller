@@ -54,3 +54,6 @@ OTHER_FILES += platformio.ini
 SOURCES += \
     src/main.cpp
 
+HEADERS += \
+    src/main.h
+
