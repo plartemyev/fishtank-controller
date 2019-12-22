@@ -9,7 +9,7 @@
 #define motorPin2  8     // IN2 on the ULN2003 driver 1
 #define motorPin3  9     // IN3 on the ULN2003 driver 1
 #define motorPin4  10     // IN4 on the ULN2003 driver 1
-#define FIRST_FEEDING_HOUR 6
+#define FIRST_FEEDING_HOUR 8
 #define FIRST_FEEDING_MINUTE 1
 #define SECOND_FEEDING_HOUR 21
 #define SECOND_FEEDING_MINUTE 55
@@ -22,6 +22,10 @@ static const char * TIME_HEADER = "T";   // Header tag for serial time sync mess
 static unsigned delayMS;
 
 void setup() {
+    pinMode(HEATER_PIN, OUTPUT);
+    digitalWrite(HEATER_PIN, LOW);
+    pinMode(VIBRO_PIN, OUTPUT);
+    digitalWrite(VIBRO_PIN, LOW);
     Serial.begin(115200);
     dht.begin();
     sensor_t sensor;
@@ -33,10 +37,6 @@ void setup() {
         Serial.println("Unable to sync with the RTC");
     else
         Serial.println("RTC has set the system time!");
-    pinMode(HEATER_PIN, OUTPUT);
-    digitalWrite(HEATER_PIN, LOW);
-    pinMode(VIBRO_PIN, OUTPUT);
-    digitalWrite(VIBRO_PIN, LOW);
     feeder_stepper.setMaxSpeed(600.0);
     feeder_stepper.setAcceleration(100.0);
     feeder_stepper.setSpeed(200);
@@ -84,9 +84,9 @@ void loop()
     }
     if (timeStatus() == timeSet) {
         if (hour() == FIRST_FEEDING_HOUR and minute() == FIRST_FEEDING_MINUTE){
-            feedFish(3);
+            feedFish(1);
         } else if (hour() == SECOND_FEEDING_HOUR and minute() == SECOND_FEEDING_MINUTE){
-            feedFish(3);
+            feedFish(1);
         }
         digitalClockDisplay();
     } else {
